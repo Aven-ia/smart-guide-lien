@@ -1,0 +1,4 @@
+# Les livrets portent le nom, l'adresse et le téléphone du gérant.
+# Ils sont partagés par lien, ils ne sont pas publiés au monde.
+User-agent: *
+Disallow: /
