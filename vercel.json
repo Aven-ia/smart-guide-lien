@@ -1,3 +1,6 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "_lisez_moi": "La fonction s'exécutait à Washington (iad1, région par défaut) pendant que Postgres est à Dublin (eu-west-1). Chaque page faisait Paris → Washington → Dublin → Washington → Paris : deux traversées de l'Atlantique pour rendre 6 ko de HTML. dub1 met la fonction à côté de la base. Le gain est pour le voyageur français ; pour un robot d'aperçu qui crawle depuis les États-Unis, c'est à peu près neutre — et c'est le voyageur qui compte.",
+  "regions": ["dub1"],
   "rewrites": [{ "source": "/(.*)", "destination": "/api/g" }]
 }
