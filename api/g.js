@@ -281,7 +281,15 @@ module.exports = async (req, res) => {
   }
 
   const aUnePhoto = Array.isArray(l.photos) && l.photos.length > 0;
-  const urlImage = aUnePhoto ? `https://${hote}/${slug}/apercu.jpg` : null;
+  /* UNE SEULE ADRESSE POUR LA PAGE, UNE SEULE POUR SON IMAGE. L'aperçu partait
+     du chemin DEMANDÉ pendant que la page se déclarait canonique sur un autre :
+     la page disait « mon adresse est X » et pointait son image vers Y. Rien
+     n'était cassé — la fonction résout aussi les anciens slugs pour
+     /apercu.jpg — mais ça faisait trois entrées de cache CDN pour une seule
+     photo, et le jour où les anciennes adresses expireront, l'aperçu casserait
+     sur les liens déjà partagés pendant que la page, elle, répondrait encore. */
+  const slugCanon = l.slugCanonique || slug;
+  const urlImage = aUnePhoto ? `https://${hote}/${slugCanon}/apercu.jpg` : null;
   const fond = /^#[0-9a-f]{6}$/i.test(l.couleurFond || '') ? l.couleurFond : '#F6F4EF';
   const { corps } = corpsLivret(l, urlImage);
   const hote_ = (l.contacts && l.contacts.hote) || 'votre hôte';
@@ -301,7 +309,7 @@ module.exports = async (req, res) => {
     // messagerie, c'est l'adresse courante. Sans ça, chaque ancienne adresse se
     // présente comme une page distincte, et un aperçu WhatsApp figé sur une
     // adresse abandonnée survit à toutes les corrections du gérant.
-    url: `https://${hote}/${l.slugCanonique || slug}`,
+    url: `https://${hote}/${slugCanon}`,
     image: urlImage,
     fond, encre: encreLisible(fond), corps, horsLigne: true,
   }));
