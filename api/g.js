@@ -34,16 +34,68 @@ function lireChemin(url) {
   return { slug: chemin, image: false };
 }
 
-async function lireLivret(slug) {
-  if (!slug || slug.length > 120 || !/^[a-z0-9à-ÿ/-]+$/i.test(slug)) return null;
-  const r = await fetch(`${SUPABASE}/rest/v1/rpc/livret_public`, {
+const slugValide = (slug) => !!slug && slug.length <= 120 && /^[a-z0-9à-ÿ/-]+$/i.test(slug);
+
+async function rpc(nom, slug) {
+  if (!slugValide(slug)) return null;
+  const r = await fetch(`${SUPABASE}/rest/v1/rpc/${nom}`, {
     method: 'POST',
     headers: { apikey: CLE, Authorization: `Bearer ${CLE}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ p_slug: slug }),
   });
   if (!r.ok) return null;
-  const d = await r.json();
+  return r.json();
+}
+
+async function lireLivret(slug) {
+  const d = await rpc('livret_public', slug);
   return d && typeof d === 'object' ? d : null;
+}
+
+/* LE HTML DE LA PAGE NE CONTIENT AUCUNE PHOTO, il n'a donc aucune raison de les
+   rapatrier : la charge utile faisait 242 ko dont 96 % de photos pour produire
+   6 ko de HTML. La page reçoit l'entête de la première photo — de quoi savoir
+   qu'elle existe et y lire ses dimensions — et l'image entière ne se demande
+   qu'ici, pour /apercu.jpg. La copie hors ligne du voyageur passe par cette
+   même adresse, en requête distincte : elle n'a jamais tiré son image de la
+   charge utile de la page. Vérifié avant de la retirer. */
+async function lireApercu(slug) {
+  const d = await rpc('livret_public_apercu', slug);
+  return typeof d === 'string' ? d : null;
+}
+
+/* Les dimensions se lisent dans l'entête de l'image, sans la décoder ni la
+   ré-encoder. On PARCOURT les segments au lieu de chercher les deux octets du
+   marqueur : ces deux octets-là existent aussi au milieu des données, et une
+   recherche naïve tomberait un jour sur l'un d'eux. Marqueur SOF mesuré à
+   l'octet 157 à 159 sur les 30 photos de la base — 4 000 caractères de base64
+   en couvrent largement le pire cas.
+   Les clients d'aperçu s'en servent pour réserver la place avant de télécharger
+   l'image ; sans elles, certains affichent une vignette carrée puis se ravisent. */
+function dimensionsImage(entete) {
+  const m = String(entete || '').match(/^data:image\/[a-z+]+;base64,(.*)$/i);
+  if (!m) return null;
+  let b = Buffer.from(m[1], 'base64');
+  if (b.length < 24) return null;
+  // PNG : IHDR, largeur et hauteur en big-endian aux octets 16 et 20
+  if (b[0] === 0x89 && b[1] === 0x50) {
+    return { l: b.readUInt32BE(16), h: b.readUInt32BE(20) };
+  }
+  if (b[0] !== 0xff || b[1] !== 0xd8) return null;      // pas un JPEG
+  let i = 2;
+  while (i + 9 < b.length) {
+    if (b[i] !== 0xff) { i++; continue; }
+    const marqueur = b[i + 1];
+    if (marqueur === 0xff || marqueur === 0x01 || (marqueur >= 0xd0 && marqueur <= 0xd9)) { i += 2; continue; }
+    const taille = b.readUInt16BE(i + 2);
+    // SOF0..SOF15, sauf C4 (Huffman), C8 (extension JPEG) et CC (arithmétique)
+    const estSOF = marqueur >= 0xc0 && marqueur <= 0xcf
+      && marqueur !== 0xc4 && marqueur !== 0xc8 && marqueur !== 0xcc;
+    if (estSOF) return { h: b.readUInt16BE(i + 5), l: b.readUInt16BE(i + 7) };
+    if (taille < 2) return null;
+    i += 2 + taille;
+  }
+  return null;                                          // entête tronquée : on n'annonce rien
 }
 
 // L'encre se dérive du fond, elle ne se choisit pas : c'est la règle du livret.
@@ -117,7 +169,7 @@ const BOUTON_HORS_LIGNE = `<div class="hl">
 })();
 <\/script>`;
 
-function coquille({ titre, description, url, image, corps, fond, encre, horsLigne }) {
+function coquille({ titre, description, url, image, dim, corps, fond, encre, horsLigne }) {
   return `<!doctype html>
 <html lang="fr">
 <head>
@@ -132,7 +184,9 @@ function coquille({ titre, description, url, image, corps, fond, encre, horsLign
 <meta property="og:description" content="${echapper(description)}">
 <meta property="og:url" content="${echapper(url)}">
 ${image ? `<meta property="og:image" content="${echapper(image)}">
-<meta property="og:image:alt" content="${echapper(titre)}">` : ''}
+<meta property="og:image:alt" content="${echapper(titre)}">` : ''}${image && dim ? `
+<meta property="og:image:width" content="${dim.l}">
+<meta property="og:image:height" content="${dim.h}">` : ''}
 <meta name="twitter:card" content="${image ? 'summary_large_image' : 'summary'}">
 <link rel="canonical" href="${echapper(url)}">
 <style>
@@ -270,8 +324,7 @@ module.exports = async (req, res) => {
   // L'aperçu : première photo du logement, décodée depuis le JSON.
   // Une data: URI ne peut pas servir d'og:image, il faut une vraie adresse.
   if (image) {
-    const ph = Array.isArray(l.photos) ? l.photos[0] : null;
-    const url = ph && (typeof ph === 'string' ? ph : ph.dataUrl);
+    const url = await lireApercu(slug);
     const m = String(url || '').match(/^data:(image\/[a-z+]+);base64,(.+)$/i);
     if (!m) return res.status(404).end('');
     const buf = Buffer.from(m[2], 'base64');
@@ -280,7 +333,8 @@ module.exports = async (req, res) => {
     return res.status(200).end(buf);
   }
 
-  const aUnePhoto = Array.isArray(l.photos) && l.photos.length > 0;
+  const aUnePhoto = !!l.apercuEntete;
+  const dim = aUnePhoto ? dimensionsImage(l.apercuEntete) : null;
   /* UNE SEULE ADRESSE POUR LA PAGE, UNE SEULE POUR SON IMAGE. L'aperçu partait
      du chemin DEMANDÉ pendant que la page se déclarait canonique sur un autre :
      la page disait « mon adresse est X » et pointait son image vers Y. Rien
@@ -310,7 +364,7 @@ module.exports = async (req, res) => {
     // présente comme une page distincte, et un aperçu WhatsApp figé sur une
     // adresse abandonnée survit à toutes les corrections du gérant.
     url: `https://${hote}/${slugCanon}`,
-    image: urlImage,
+    image: urlImage, dim,
     fond, encre: encreLisible(fond), corps, horsLigne: true,
   }));
 };
