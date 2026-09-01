@@ -59,6 +59,21 @@ function encreLisible(fond) {
   return (L + 0.05) / 0.05 > 1.05 / (L + 0.05) ? '#1A1D17' : '#FFFFFF';
 }
 
+/* « VOTRE SÉJOUR À LE HAVRE » : un lien envoyé à un voyageur se lit, et cette
+   faute-là se voit. Les villes à article défini contractent la préposition —
+   « au Havre », « au Mans », « aux Sables », « à la Rochelle ». Le nom garde sa
+   majuscule d'origine partout ailleurs ; on ne touche qu'à l'article de tête. */
+function aVille(ville) {
+  const v = String(ville || '').trim();
+  if (!v) return '';
+  // « les » AVANT « le » : l'alternance est ordonnée, et « Les Sables » attrapé
+  // par « le » donnait « au s Sables ». Vérifié sur la liste, pas déduit.
+  const m = v.match(/^(les|le)\s+(.+)$/i);
+  if (!m) return ' à ' + v;                     // « à Paris », et « à La Rochelle »,
+  // « à L’Isle-Adam » : l'article féminin ne se contracte pas et garde sa
+  // majuscule — il fait partie du nom propre.
+  return (m[1].toLowerCase() === 'les' ? ' aux ' : ' au ') + m[2];
+}
 function coquille({ titre, description, url, image, corps, fond, encre }) {
   return `<!doctype html>
 <html lang="fr">
@@ -230,8 +245,14 @@ module.exports = async (req, res) => {
   res.setHeader('X-Robots-Tag', 'noindex, nofollow');
   res.status(200).end(coquille({
     titre: `${l.nom || 'Votre logement'} — Livret d’accueil`,
-    description: `Tout ce qu’il faut savoir pour votre séjour${l.ville ? ' à ' + l.ville : ''}, par ${hote_}.`,
-    url: `https://${hote}/${slug}`,
+    description: `Tout ce qu’il faut savoir pour votre séjour${aVille(l.ville)}, par ${hote_}.`,
+    // L'ADRESSE CANONIQUE EST LA NOUVELLE, PAS CELLE QUI A ÉTÉ DEMANDÉE.
+    // Le voyageur reste sur SON lien — pas de redirection, sa promesse tient —
+    // mais ce que la page déclare d'elle-même, aux robots comme aux aperçus de
+    // messagerie, c'est l'adresse courante. Sans ça, chaque ancienne adresse se
+    // présente comme une page distincte, et un aperçu WhatsApp figé sur une
+    // adresse abandonnée survit à toutes les corrections du gérant.
+    url: `https://${hote}/${l.slugCanonique || slug}`,
     image: urlImage,
     fond, encre: encreLisible(fond), corps,
   }));
