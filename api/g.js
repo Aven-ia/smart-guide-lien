@@ -74,7 +74,50 @@ function aVille(ville) {
   // majuscule — il fait partie du nom propre.
   return (m[1].toLowerCase() === 'les' ? ' aux ' : ' au ') + m[2];
 }
-function coquille({ titre, description, url, image, corps, fond, encre }) {
+/* « GARDER HORS LIGNE » : le voyageur n'a pas toujours de réseau en arrivant —
+   c'est même le moment où il en a le moins, et précisément celui où il cherche
+   le code de la porte. Le bouton enregistre la page qu'il a sous les yeux.
+   La photo est la SEULE ressource distante de cette page : elle est incorporée
+   en data: URI dans la copie, sinon le fichier « hors ligne » afficherait un
+   cadre vide au premier passage sans réseau — c'est-à-dire toujours.
+   Si l'incorporation échoue, on enregistre quand même : un livret sans sa
+   photo reste un livret, un livret absent n'est rien. */
+const BOUTON_HORS_LIGNE = `<div class="hl">
+  <button type="button" id="hl-btn">Garder hors ligne</button>
+  <p>Enregistre ce livret sur votre appareil. Il s’ouvrira sans connexion.</p>
+</div>
+<script>
+(function(){
+  var b=document.getElementById('hl-btn');
+  if(!b || !window.Blob || !URL.createObjectURL){ if(b) b.parentNode.style.display='none'; return; }
+  b.addEventListener('click', function(){
+    var initial=b.textContent;
+    b.disabled=true; b.textContent='Enregistrement…';
+    var img=document.querySelector('img.photo');
+    var pret = (img && img.src && img.src.indexOf('data:')!==0)
+      ? fetch(img.src).then(function(r){ return r.blob(); }).then(function(bl){
+          return new Promise(function(ok){ var f=new FileReader(); f.onload=function(){ ok(f.result); }; f.onerror=function(){ ok(null); }; f.readAsDataURL(bl); });
+        }).catch(function(){ return null; })
+      : Promise.resolve(null);
+    pret.then(function(donnees){
+      var copie=document.documentElement.cloneNode(true);
+      var zone=copie.querySelector('.hl'); if(zone) zone.remove();
+      copie.querySelectorAll('script').forEach(function(s){ s.remove(); });
+      var ci=copie.querySelector('img.photo');
+      if(ci){ if(donnees) ci.setAttribute('src', donnees); else ci.remove(); }
+      var html='<!doctype html>\\n'+copie.outerHTML;
+      var nom=(document.title||'Livret').replace(/[\\\\/:*?"<>|]/g,'-').slice(0,80)+'.html';
+      var a=document.createElement('a');
+      a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+      a.download=nom; document.body.appendChild(a); a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+      b.disabled=false; b.textContent=initial;
+    });
+  });
+})();
+<\/script>`;
+
+function coquille({ titre, description, url, image, corps, fond, encre, horsLigne }) {
   return `<!doctype html>
 <html lang="fr">
 <head>
@@ -118,9 +161,15 @@ ${image ? `<meta property="og:image" content="${echapper(image)}">
   .pied{margin-top:38px;padding-top:18px;font-size:11px;letter-spacing:.1em;
         text-transform:uppercase;opacity:.5;text-align:center}
   .note{margin-top:24px;font-size:13px;opacity:.66;line-height:1.55}
+  .hl{margin-top:34px;text-align:center}
+  .hl button{font:inherit;font-size:13px;color:inherit;background:transparent;cursor:pointer;
+    border:1px solid currentColor;border-radius:9px;padding:9px 15px;opacity:.62}
+  .hl button:hover{opacity:1}
+  .hl p{font-size:12px;opacity:.5;margin-top:7px;line-height:1.5}
 </style>
 </head>
 <body><div class="page">${corps}
+${horsLigne ? BOUTON_HORS_LIGNE : ''}
 <p class="pied">Smart Guide · Aven IA</p>
 </div></body>
 </html>`;
@@ -254,6 +303,6 @@ module.exports = async (req, res) => {
     // adresse abandonnée survit à toutes les corrections du gérant.
     url: `https://${hote}/${l.slugCanonique || slug}`,
     image: urlImage,
-    fond, encre: encreLisible(fond), corps,
+    fond, encre: encreLisible(fond), corps, horsLigne: true,
   }));
 };
