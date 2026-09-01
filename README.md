@@ -41,3 +41,19 @@ différence.
 ## Un lien envoyé est une promesse
 
 Le slug est figé à la première publication. Renommer un logement ne casse pas la promesse.
+
+## Pourquoi `"regions": ["dub1"]`
+
+La fonction s'exécutait à `iad1` — Washington, la région par défaut de Vercel que
+personne n'avait changée — pendant que Postgres est à `eu-west-1`, Dublin. Chaque
+affichage de page faisait Paris → Washington → Dublin → Washington → Paris : deux
+traversées de l'Atlantique pour rendre 6 ko de HTML. Mesuré sur `x-vercel-id`,
+10 requêtes froides sans exception : `cdg1::iad1`.
+
+`dub1` met la fonction à côté de la base. Le gain est pour le voyageur ; pour un
+robot d'aperçu qui crawle depuis les États-Unis c'est à peu près neutre, et c'est
+le voyageur qui compte.
+
+**`vercel.json` n'accepte aucune clé hors schéma** — pas même un commentaire. Un
+`_lisez_moi` y a fait échouer un déploiement entier avec
+« should NOT have additional property ». Le pourquoi se documente ici.
