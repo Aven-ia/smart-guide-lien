@@ -277,12 +277,12 @@ function corpsLivret(l, urlImage) {
        ${c.email ? `<div class="lig"><span class="cle">Email</span><span class="val">${echapper(c.email)}</span></div>` : ''}`)}</section>`);
   }
 
-  const n = Array.isArray(l.recos) ? l.recos.length : 0;
-  const e = Array.isArray(l.equipements) ? l.equipements.length : 0;
-  p.push(`<p class="note"><strong>Temps 2 — les données réelles.</strong> Cette page lit
-  le livret publié par <code>livret_public(slug)</code>. Le rendu complet viendra du
-  moteur de l’application, jamais d’une deuxième implémentation.
-  ${n ? `Ce livret contient ${n} recommandation${n > 1 ? 's' : ''}` : ''}${n && e ? ' et ' : ''}${e ? `${e} équipement${e > 1 ? 's' : ''}` : ''}${n || e ? ', pas encore affichés ici.' : ''}</p>`);
+  /* UNE NOTE DE DÉVELOPPEUR N'A RIEN À FAIRE SOUS LES YEUX D'UN VOYAGEUR.
+     Il y avait ici un paragraphe intitulé « Temps 2 — les données réelles »,
+     avec un nom de fonction Postgres dedans, qui annonçait aux clients de TILIT
+     ce que la page ne savait pas encore afficher. Il a été servi en production.
+     On ne le remplace par rien : une page qui ne montre pas encore tout n'a pas
+     à s'en expliquer au voyageur. C'est à nous de le dire au gérant. */
 
   return { corps: p.join('\n'), fondBloc };
 }
