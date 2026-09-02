@@ -345,7 +345,17 @@ module.exports = async (req, res) => {
   const slugCanon = l.slugCanonique || slug;
   const urlImage = aUnePhoto ? `https://${hote}/${slugCanon}/apercu.jpg` : null;
   const fond = /^#[0-9a-f]{6}$/i.test(l.couleurFond || '') ? l.couleurFond : '#F6F4EF';
-  const { corps } = corpsLivret(l, urlImage);
+  /* API/G.JS N'EST PLUS UN MOTEUR DE RENDU — sa règle en tête devient vraie par
+     construction au lieu d'être une promesse. Le corps de la page est le HTML
+     que l'application a produit avec livretHTML, le seul moteur, et rangé au
+     moment de l'enregistrement du livret.
+     Le repli ne disparaît pas : les livrets publiés AVANT cette version n'ont
+     pas encore de rendu rangé — ils en recevront un à la prochaine
+     sauvegarde du gérant. D'ici là ils gardent l'ancien affichage, incomplet
+     mais servi, plutôt qu'une page vide. */
+  const { corps: corpsReconstruit } = corpsLivret(l, urlImage);
+  const corps = typeof l.rendu === 'string' && l.rendu.length > 200 ? l.rendu : corpsReconstruit;
+  const servi = corps === corpsReconstruit ? 'repli' : 'application';
   const hote_ = (l.contacts && l.contacts.hote) || 'votre hôte';
 
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -354,6 +364,9 @@ module.exports = async (req, res) => {
   // il n'est pas publié au monde. Pas d'indexation tant que le gérant ne l'a pas
   // explicitement demandé.
   res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  /* Dit lequel des deux chemins a servi, sans avoir à lire la page : « repli »
+     signale un livret publié qui n'a pas encore été réenregistré. */
+  res.setHeader('X-Rendu', servi);
   res.status(200).end(coquille({
     titre: `${l.nom || 'Votre logement'} — Livret d’accueil`,
     description: `Tout ce qu’il faut savoir pour votre séjour${aVille(l.ville)}, par ${hote_}.`,
