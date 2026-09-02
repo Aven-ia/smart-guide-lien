@@ -145,18 +145,27 @@ const BOUTON_HORS_LIGNE = `<div class="hl">
   b.addEventListener('click', function(){
     var initial=b.textContent;
     b.disabled=true; b.textContent='Enregistrement…';
-    var img=document.querySelector('img.photo');
-    var pret = (img && img.src && img.src.indexOf('data:')!==0)
-      ? fetch(img.src).then(function(r){ return r.blob(); }).then(function(bl){
-          return new Promise(function(ok){ var f=new FileReader(); f.onload=function(){ ok(f.result); }; f.onerror=function(){ ok(null); }; f.readAsDataURL(bl); });
-        }).catch(function(){ return null; })
-      : Promise.resolve(null);
+    /* ON INCORPORE TOUTE IMAGE DISTANTE, PAS « CELLE QUI PORTE LA CLASSE PHOTO ».
+       Le corps de la page vient maintenant du moteur de l'application : ses
+       classes ne sont pas les nôtres, et « img.photo » n'y existe plus. Un
+       sélecteur qui nomme une classe est un pari sur un balisage qu'on
+       n'écrit pas. Mesuré : le bouton n'incorporait plus rien du tout. */
+    var distantes=[].slice.call(document.images).filter(function(i){
+      return i.getAttribute('src') && i.src.indexOf('data:')!==0; });
+    var pret = Promise.all(distantes.map(function(img){
+      return fetch(img.src).then(function(r){ return r.blob(); }).then(function(bl){
+        return new Promise(function(ok){ var f=new FileReader(); f.onload=function(){ ok(f.result); }; f.onerror=function(){ ok(null); }; f.readAsDataURL(bl); });
+      }).catch(function(){ return null; });
+    }));
     pret.then(function(donnees){
       var copie=document.documentElement.cloneNode(true);
       var zone=copie.querySelector('.hl'); if(zone) zone.remove();
       copie.querySelectorAll('script').forEach(function(s){ s.remove(); });
-      var ci=copie.querySelector('img.photo');
-      if(ci){ if(donnees) ci.setAttribute('src', donnees); else ci.remove(); }
+      var cibles=[].slice.call(copie.querySelectorAll('img')).filter(function(i){
+        return i.getAttribute('src') && i.getAttribute('src').indexOf('data:')!==0; });
+      cibles.forEach(function(ci,k){
+        if(donnees[k]) ci.setAttribute('src', donnees[k]); else ci.remove();
+      });
       var html='<!doctype html>\\n'+copie.outerHTML;
       var nom=(document.title||'Livret').replace(/[\\\\/:*?"<>|]/g,'-').slice(0,80)+'.html';
       var a=document.createElement('a');
