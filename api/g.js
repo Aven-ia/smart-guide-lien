@@ -42,96 +42,112 @@ const T = {
         avec:'Tout ce qu’il faut savoir pour votre séjour{ville}, par {hote}.',
         sans:'Tout ce qu’il faut savoir pour votre séjour, par {hote}.',
         hors:'Garder hors ligne', horsNote:'Enregistre ce livret sur votre appareil. Il s’ouvrira sans connexion.', horsCours:'Enregistrement…',
+        indispoT:"Livret momentanément indisponible", indispoP:"Le livret ne peut pas être affiché pour l’instant. Réessayez dans quelques minutes. Si vous avez besoin des informations d’arrivée tout de suite, contactez votre hôte.",
         absentT:'Ce livret n’est pas partagé',
         absentP:'Le lien est peut-être ancien, ou le logement a été dépublié. Demandez-en un nouveau à votre hôte.' },
   en: { livret:'Welcome book', hote:'your host',
         avec:'Everything you need for your stay in {ville}, from {hote}.',
         sans:'Everything you need for your stay, from {hote}.',
         hors:'Keep offline', horsNote:'Saves this booklet on your device. It will open without a connection.', horsCours:'Saving…',
+        indispoT:"Booklet temporarily unavailable", indispoP:"This booklet can’t be displayed right now. Please try again in a few minutes. If you need your arrival details immediately, contact your host.",
         absentT:'This booklet is not shared',
         absentP:'The link may be old, or the property is no longer published. Ask your host for a new one.' },
   es: { livret:'Guía de bienvenida', hote:'su anfitrión',
         avec:'Todo lo que necesita para su estancia en {ville}, de parte de {hote}.',
         sans:'Todo lo que necesita para su estancia, de parte de {hote}.',
         hors:'Guardar sin conexión', horsNote:'Guarda esta guía en su dispositivo. Se abrirá sin conexión.', horsCours:'Guardando…',
+        indispoT:"Guía no disponible por el momento", indispoP:"La guía no se puede mostrar en este momento. Inténtelo de nuevo en unos minutos. Si necesita los datos de llegada ahora mismo, contacte con su anfitrión.",
         absentT:'Esta guía no está compartida',
         absentP:'El enlace puede ser antiguo o el alojamiento ya no está publicado. Pida uno nuevo a su anfitrión.' },
   de: { livret:'Willkommensmappe', hote:'Ihrem Gastgeber',
         avec:'Alles Wichtige für Ihren Aufenthalt in {ville}, von {hote}.',
         sans:'Alles Wichtige für Ihren Aufenthalt, von {hote}.',
         hors:'Offline behalten', horsNote:'Speichert diese Mappe auf Ihrem Gerät. Sie öffnet sich auch ohne Verbindung.', horsCours:'Wird gespeichert…',
+        indispoT:"Mappe vorübergehend nicht verfügbar", indispoP:"Die Mappe kann im Moment nicht angezeigt werden. Bitte versuchen Sie es in einigen Minuten erneut. Wenn Sie Ihre Anreiseinformationen sofort brauchen, wenden Sie sich an Ihren Gastgeber.",
         absentT:'Diese Mappe wird nicht geteilt',
         absentP:'Der Link ist möglicherweise veraltet oder die Unterkunft ist nicht mehr veröffentlicht. Bitten Sie Ihren Gastgeber um einen neuen.' },
   it: { livret:'Guida di benvenuto', hote:'il tuo host',
         avec:'Tutto quello che serve per il vostro soggiorno a {ville}, da {hote}.',
         sans:'Tutto quello che serve per il vostro soggiorno, da {hote}.',
         hors:'Tieni offline', horsNote:'Salva questa guida sul tuo dispositivo. Si aprirà senza connessione.', horsCours:'Salvataggio…',
+        indispoT:"Guida momentaneamente non disponibile", indispoP:"La guida non può essere visualizzata in questo momento. Riprova tra qualche minuto. Se ti servono subito le informazioni di arrivo, contatta il tuo host.",
         absentT:'Questa guida non è condivisa',
         absentP:'Il link potrebbe essere vecchio o l’alloggio non è più pubblicato. Chiedine uno nuovo al tuo host.' },
   pt: { livret:'Guia de boas-vindas', hote:'o seu anfitrião',
         avec:'Tudo o que precisa para a sua estadia em {ville}, por {hote}.',
         sans:'Tudo o que precisa para a sua estadia, por {hote}.',
         hors:'Guardar offline', horsNote:'Guarda este guia no seu dispositivo. Abrirá sem ligação.', horsCours:'A guardar…',
+        indispoT:"Guia temporariamente indisponível", indispoP:"O guia não pode ser apresentado neste momento. Tente novamente dentro de alguns minutos. Se precisar já das informações de chegada, contacte o seu anfitrião.",
         absentT:'Este guia não está partilhado',
         absentP:'O link pode ser antigo ou o alojamento já não está publicado. Peça um novo ao seu anfitrião.' },
   nl: { livret:'Welkomstgids', hote:'uw gastheer',
         avec:'Alles wat u nodig hebt voor uw verblijf in {ville}, van {hote}.',
         sans:'Alles wat u nodig hebt voor uw verblijf, van {hote}.',
         hors:'Offline bewaren', horsNote:'Bewaart deze gids op uw apparaat. Hij opent zonder verbinding.', horsCours:'Opslaan…',
+        indispoT:"Gids tijdelijk niet beschikbaar", indispoP:"De gids kan nu niet worden getoond. Probeer het over een paar minuten opnieuw. Hebt u uw aankomstgegevens meteen nodig, neem dan contact op met uw gastheer.",
         absentT:'Deze gids wordt niet gedeeld',
         absentP:'De link is mogelijk verouderd of de accommodatie is niet meer gepubliceerd. Vraag uw gastheer om een nieuwe.' },
   pl: { livret:'Przewodnik powitalny', hote:'gospodarza',
         avec:'Wszystko, czego potrzebujesz na pobyt w {ville}, od {hote}.',
         sans:'Wszystko, czego potrzebujesz na pobyt, od {hote}.',
         hors:'Zachowaj offline', horsNote:'Zapisuje ten przewodnik na Twoim urządzeniu. Otworzy się bez połączenia.', horsCours:'Zapisywanie…',
+        indispoT:"Przewodnik chwilowo niedostępny", indispoP:"Przewodnika nie można teraz wyświetlić. Spróbuj ponownie za kilka minut. Jeśli potrzebujesz informacji o przyjeździe od razu, skontaktuj się z gospodarzem.",
         absentT:'Ten przewodnik nie jest udostępniony',
         absentP:'Link może być nieaktualny lub obiekt nie jest już opublikowany. Poproś gospodarza o nowy.' },
   ru: { livret:'Путеводитель для гостей', hote:'вашего хозяина',
         avec:'Всё, что нужно знать о вашем пребывании в {ville}, от {hote}.',
         sans:'Всё, что нужно знать о вашем пребывании, от {hote}.',
         hors:'Сохранить офлайн', horsNote:'Сохраняет этот путеводитель на ваше устройство. Он откроется без интернета.', horsCours:'Сохранение…',
+        indispoT:"Путеводитель временно недоступен", indispoP:"Сейчас путеводитель не открывается. Попробуйте через несколько минут. Если информация о заселении нужна срочно, свяжитесь с хозяином.",
         absentT:'Этот путеводитель не опубликован',
         absentP:'Возможно, ссылка устарела или жильё больше не опубликовано. Попросите у хозяина новую ссылку.' },
   uk: { livret:'Путівник для гостей', hote:'вашого господаря',
         avec:'Усе, що потрібно знати про ваше перебування в {ville}, від {hote}.',
         sans:'Усе, що потрібно знати про ваше перебування, від {hote}.',
         hors:'Зберегти офлайн', horsNote:'Зберігає цей путівник на вашому пристрої. Він відкриється без інтернету.', horsCours:'Збереження…',
+        indispoT:"Путівник тимчасово недоступний", indispoP:"Зараз путівник не відкривається. Спробуйте за кілька хвилин. Якщо інформація про заселення потрібна терміново, зв’яжіться з господарем.",
         absentT:'Цей путівник не опубліковано',
         absentP:'Можливо, посилання застаріле або житло більше не опубліковане. Попросіть у господаря нове.' },
   tr: { livret:'Karşılama rehberi', hote:'ev sahibiniz',
         avec:'{ville} konaklamanız için bilmeniz gereken her şey — {hote}.',
         sans:'Konaklamanız için bilmeniz gereken her şey — {hote}.',
         hors:'Çevrimdışı sakla', horsNote:'Bu rehberi cihazınıza kaydeder. Bağlantı olmadan açılır.', horsCours:'Kaydediliyor…',
+        indispoT:"Rehber şu anda açılamıyor", indispoP:"Rehber şu anda görüntülenemiyor. Birkaç dakika sonra tekrar deneyin. Giriş bilgilerine hemen ihtiyacınız varsa ev sahibinizle iletişime geçin.",
         absentT:'Bu rehber paylaşılmıyor',
         absentP:'Bağlantı eski olabilir veya konaklama artık yayında değil. Ev sahibinizden yenisini isteyin.' },
   zh: { livret:'入住指南', hote:'您的房东',
         avec:'您在{ville}住宿所需的全部信息，由{hote}提供。',
         sans:'您住宿所需的全部信息，由{hote}提供。',
         hors:'离线保存', horsNote:'将本指南保存到您的设备，无需联网即可打开。', horsCours:'保存中…',
+        indispoT:"指南暂时无法打开", indispoP:"指南目前无法显示，请几分钟后再试。如果您现在就需要入住信息，请联系房东。",
         absentT:'该指南未共享',
         absentP:'链接可能已过期，或房源已取消发布。请向房东索取新链接。' },
   ja: { livret:'ご滞在ガイド', hote:'ホスト',
         avec:'{ville}でのご滞在に必要な情報のすべて。{hote}より。',
         sans:'ご滞在に必要な情報のすべて。{hote}より。',
         hors:'オフラインで保存', horsNote:'このガイドを端末に保存します。通信なしで開けます。', horsCours:'保存中…',
+        indispoT:"ガイドを一時的に表示できません", indispoP:"ただいまガイドを表示できません。数分後にもう一度お試しください。チェックイン情報がすぐに必要な場合は、ホストにご連絡ください。",
         absentT:'このガイドは共有されていません',
         absentP:'リンクが古いか、宿泊先の公開が終了しています。ホストに新しいリンクをお尋ねください。' },
   ko: { livret:'이용 안내서', hote:'호스트',
         avec:'{ville} 숙박에 필요한 모든 정보입니다. {hote} 드림.',
         sans:'숙박에 필요한 모든 정보입니다. {hote} 드림.',
         hors:'오프라인 저장', horsNote:'이 안내서를 기기에 저장합니다. 인터넷 없이 열 수 있습니다.', horsCours:'저장 중…',
+        indispoT:"안내서를 일시적으로 열 수 없습니다", indispoP:"지금은 안내서를 표시할 수 없습니다. 몇 분 후에 다시 시도해 주세요. 입실 정보가 지금 필요하시면 호스트에게 연락해 주세요.",
         absentT:'이 안내서는 공유되지 않았습니다',
         absentP:'링크가 오래되었거나 숙소 공개가 종료되었습니다. 호스트에게 새 링크를 요청하세요.' },
   ar: { livret:'دليل الاستقبال', hote:'مضيفك',
         avec:'كل ما تحتاج معرفته عن إقامتك في {ville}، من {hote}.',
         sans:'كل ما تحتاج معرفته عن إقامتك، من {hote}.',
         hors:'الحفظ دون اتصال', horsNote:'يحفظ هذا الدليل على جهازك. سيُفتح دون اتصال بالإنترنت.', horsCours:'جارٍ الحفظ…',
+        indispoT:"الدليل غير متاح مؤقتًا", indispoP:"لا يمكن عرض الدليل في الوقت الحالي. يرجى المحاولة بعد بضع دقائق. إذا كنت بحاجة إلى معلومات الوصول الآن، تواصل مع مضيفك.",
         absentT:'هذا الدليل غير متاح',
         absentP:'قد يكون الرابط قديمًا أو لم يعد السكن منشورًا. اطلب رابطًا جديدًا من مضيفك.' },
   he: { livret:'מדריך אירוח', hote:'המארח',
         avec:'כל מה שצריך לדעת על השהות שלכם ב{ville}, מאת {hote}.',
         sans:'כל מה שצריך לדעת על השהות שלכם, מאת {hote}.',
         hors:'שמירה לא מקוונת', horsNote:'שומר את המדריך במכשיר שלכם. הוא ייפתח גם ללא חיבור.', horsCours:'שומר…',
+        indispoT:"המדריך אינו זמין כרגע", indispoP:"לא ניתן להציג את המדריך כרגע. נסו שוב בעוד כמה דקות. אם אתם זקוקים לפרטי הכניסה מיד, פנו למארח.",
         absentT:'המדריך הזה אינו משותף',
         absentP:'ייתכן שהקישור ישן, או שהנכס אינו מפורסם עוד. בקשו קישור חדש מהמארח.' },
 };
@@ -169,15 +185,49 @@ function lireChemin(url) {
 
 const slugValide = (slug) => !!slug && slug.length <= 120 && /^[a-z0-9à-ÿ/-]+$/i.test(slug);
 
+/* « PAS DE LIVRET » ET « PAS DE BASE » NE SONT PAS LA MÊME PHRASE.
+   Cette fonction rendait `null` dans les deux cas, et la page annonçait alors
+   au voyageur « Ce livret n'est pas partagé ». Mesuré le 19/10, base en panne :
+   une coupure réseau faisait planter la fonction (500 « A server error has
+   occurred » sous les yeux de quelqu'un devant une porte), et une base qui
+   répondait 500 ou 429 produisait pire encore — un mensonge crédible. Le
+   voyageur croit que son hôte a dépublié le livret, et l'appelle pour rien.
+
+   La règle est donc : la page ne peut dire « ce livret n'est pas partagé » que
+   si la base a RÉPONDU qu'il n'existe pas. Tout le reste — réseau coupé, nom
+   d'hôte disparu, 5xx, 429, réponse illisible, silence — est une
+   indisponibilité, et se dit comme telle.
+
+   Le délai borne l'attente : sans lui, une base qui ne répond jamais tient la
+   fonction jusqu'à ce que la plateforme la tue, et on retombe sur la page de
+   plantage qu'on cherche justement à supprimer. */
+class BaseInjoignable extends Error {}
+
+const DELAI_MS = 6000;
+
 async function rpc(nom, slug, lang) {
+  // Un slug malformé n'est pas une panne : aucun livret ne peut porter ce nom.
   if (!slugValide(slug)) return null;
-  const r = await fetch(`${SUPABASE}/rest/v1/rpc/${nom}`, {
-    method: 'POST',
-    headers: { apikey: CLE, Authorization: `Bearer ${CLE}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(lang ? { p_slug: slug, p_lang: lang } : { p_slug: slug }),
-  });
-  if (!r.ok) return null;
-  return r.json();
+  let r;
+  try {
+    r = await fetch(`${SUPABASE}/rest/v1/rpc/${nom}`, {
+      method: 'POST',
+      headers: { apikey: CLE, Authorization: `Bearer ${CLE}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(lang ? { p_slug: slug, p_lang: lang } : { p_slug: slug }),
+      signal: AbortSignal.timeout(DELAI_MS),
+    });
+  } catch (e) {
+    throw new BaseInjoignable(`appel ${nom} : ${e && e.message}`);
+  }
+  // Un code d'erreur vient de NOTRE côté — clé refusée, fonction absente,
+  // base saturée. Jamais de « ce livret n'existe pas » : ça, PostgREST le dit
+  // par un 200 dont le corps est nul.
+  if (!r.ok) throw new BaseInjoignable(`appel ${nom} : HTTP ${r.status}`);
+  try {
+    return await r.json();
+  } catch (e) {
+    throw new BaseInjoignable(`appel ${nom} : réponse illisible`);
+  }
 }
 
 /* La fonction rend le HTML de la langue demandée, et le français quand cette
@@ -385,6 +435,28 @@ ${horsLigne ? boutonHorsLigne(t) : ''}
 </html>`;
 }
 
+/* 503, ET SURTOUT PAS 404. Le code dit au voyageur comme aux robots ce qui se
+   passe : « reviens », pas « il n'y a rien ici ». `no-store` est la partie qui
+   compte le plus — une page d'indisponibilité gardée deux minutes par le CDN
+   survivrait au retour de la base, et le voyageur verrait la panne après la
+   fin de la panne. */
+function pageIndisponible(res, hote, chemin, lang) {
+  const t = textes(lang);
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Retry-After', '60');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  res.setHeader('X-Rendu', 'indisponible');
+  return res.status(503).end(coquille({
+    lang,
+    titre: t.indispoT,
+    description: t.indispoP,
+    url: `https://${hote}/${chemin}`,
+    corps: `<p class="sur">Smart Guide</p><h1>${echapper(t.indispoT)}</h1>
+      <p class="lieu">${echapper(t.indispoP)}</p>`,
+  }));
+}
+
 function bloc(fondBloc, encreBloc, contenu) {
   return `<div class="bloc" style="background:${fondBloc};color:${encreBloc}">${contenu}</div>`;
 }
@@ -443,8 +515,39 @@ function corpsLivret(l, urlImage) {
   return { corps: p.join('\n'), fondBloc };
 }
 
+/* RIEN NE DOIT POUVOIR SORTIR D'ICI SANS PASSER PAR UNE PAGE. Le corps de la
+   fonction est enveloppé : une exception, quelle qu'en soit l'origine — la
+   base, une entête d'image tordue, un cas auquel personne n'a pensé — devient
+   une page d'indisponibilité lisible, pas le « A server error has occurred »
+   de la plateforme. C'est la différence entre un voyageur qui sait quoi faire
+   et un voyageur planté devant une porte.
+   Le repli ne tente PAS de rattraper le coup en rappelant la base : si elle
+   n'a pas répondu la première fois, la rappeler ne fait qu'ajouter un délai
+   au bout duquel la plateforme nous tue — et on reperdrait la page.
+
+   La langue de la page de panne se lit dans l'ADRESSE, seule source encore
+   disponible. Conséquence assumée : un livret réellement nommé « /it » ou
+   « /ko » recevra, pendant une panne, le message en italien ou en coréen. La
+   base est le seul endroit qui saurait détromper, et c'est elle qui manque.
+   Le message reste juste — « reviens dans quelques minutes » — seule sa
+   langue peut être fausse, dans ce cas-là et pendant ce temps-là. */
 module.exports = async (req, res) => {
   const hote = req.headers['x-forwarded-host'] || req.headers.host || 'guide.aven-ia.com';
+  const vu = lireChemin(req.url);
+  try {
+    return await servir(req, res, hote);
+  } catch (e) {
+    console.error('[g] indisponible', (e && e.message) || e);
+    if (res.writableEnded) return;                 // la réponse est déjà partie
+    if (vu.image) {                                // l'aperçu : pas de page, pas de cache
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(503).end('');
+    }
+    return pageIndisponible(res, hote, `${vu.slug || ''}${vu.lang ? '/' + vu.lang : ''}`, vu.lang);
+  }
+};
+
+const servir = async (req, res, hote) => {
   let { slug, image, lang } = lireChemin(req.url);
 
   if (!slug) {
