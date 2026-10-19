@@ -168,7 +168,16 @@ const echapper = (s) =>
 // et renommer un logement ne casse pas la promesse.
 function lireChemin(url) {
   const brut = String(url || '/').split('?')[0];
-  let chemin = decodeURIComponent(brut).replace(/^\/+|\/+$/g, '');
+  /* UNE ADRESSE ILLISIBLE N'EST PAS UNE PANNE. decodeURIComponent lève sur un
+     « % » mal formé — mesuré : « /tilit-conciergerie/%zz » faisait planter la
+     fonction. La plateforme rejette aujourd'hui ces adresses en 400 avant même
+     de nous appeler, mais se reposer sur une garde qu'on n'a pas écrite, c'est
+     attendre qu'elle change. On garde alors la forme brute : slugValide refuse
+     le « % », et la page rend 404 « ce livret n'est pas partagé » — ce qui est
+     vrai, et revenir plus tard n'y changerait rien. */
+  let decode;
+  try { decode = decodeURIComponent(brut); } catch (e) { decode = brut; }
+  let chemin = decode.replace(/^\/+|\/+$/g, '');
   if (!chemin) return { slug: null, image: false, lang: null };
   const image = /\/apercu\.jpg$/i.test(chemin);
   if (image) chemin = chemin.replace(/\/apercu\.jpg$/i, '');
@@ -533,9 +542,13 @@ function corpsLivret(l, urlImage) {
    langue peut être fausse, dans ce cas-là et pendant ce temps-là. */
 module.exports = async (req, res) => {
   const hote = req.headers['x-forwarded-host'] || req.headers.host || 'guide.aven-ia.com';
-  const vu = lireChemin(req.url);
+  /* Même la LECTURE de l'adresse se fait à l'intérieur : une ligne placée
+     au-dessus du try est une ligne qui peut encore sortir en page de
+     plantage, et c'est exactement ce qu'on retire. */
+  let vu = { slug: null, image: false, lang: null };
   try {
-    return await servir(req, res, hote);
+    vu = lireChemin(req.url);
+    return await servir(req, res, hote, vu);
   } catch (e) {
     console.error('[g] indisponible', (e && e.message) || e);
     if (res.writableEnded) return;                 // la réponse est déjà partie
@@ -547,8 +560,8 @@ module.exports = async (req, res) => {
   }
 };
 
-const servir = async (req, res, hote) => {
-  let { slug, image, lang } = lireChemin(req.url);
+const servir = async (req, res, hote, vu) => {
+  let { slug, image, lang } = vu;
 
   if (!slug) {
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
